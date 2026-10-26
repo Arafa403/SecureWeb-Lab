@@ -1,0 +1,8 @@
+node_modules/
+.env
+.env.*
+!.env.example
+
+secureweb.db
+secureweb.db-shm
+secureweb.db-wal
