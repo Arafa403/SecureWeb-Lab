@@ -1,0 +1,445 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SecureWeb X | Security Center</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #080d18;
+  color: #edf3ff;
+  font-family: Arial, sans-serif;
+}
+
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+aside {
+  width: 225px;
+  flex-shrink: 0;
+  background: #0e1525;
+  padding: 28px 18px;
+  border-right: 1px solid #202b40;
+}
+
+.brand {
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 40px;
+}
+
+.brand span {
+  color: #51e1bd;
+}
+
+.nav {
+  padding: 13px;
+  border-radius: 9px;
+  background: #18312f;
+  color: #62e5c3;
+}
+
+aside p,
+header p,
+.panel p {
+  color: #91a0ba;
+  line-height: 1.6;
+}
+
+main {
+  flex: 1;
+  min-width: 0;
+  padding: 32px;
+}
+
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+h1 {
+  margin: 0;
+  font-size: 28px;
+}
+
+.status {
+  color: #5ce5bf;
+  background: #12332e;
+  padding: 10px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 28px 0;
+}
+
+.card,
+.panel {
+  background: #101827;
+  border: 1px solid #202d43;
+  border-radius: 15px;
+  padding: 22px;
+}
+
+.label {
+  color: #9cabc3;
+  font-size: 14px;
+}
+
+.number {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 17px 0 9px;
+  overflow-wrap: anywhere;
+}
+
+.green {
+  color: #5ce5bf;
+}
+
+.yellow {
+  color: #ffd479;
+}
+
+.panel h2 {
+  margin-top: 0;
+  font-size: 19px;
+}
+
+.toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+button {
+  background: #17443d;
+  color: #7af0d3;
+  border: 1px solid #28675b;
+  padding: 10px 15px;
+  border-radius: 9px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #20574d;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+#message {
+  font-size: 13px;
+  min-height: 22px;
+  margin: 12px 0;
+  color: #9aabc4;
+  overflow-wrap: anywhere;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+th,
+td {
+  padding: 14px 10px;
+  border-bottom: 1px solid #253047;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+th {
+  color: #91a0ba;
+}
+
+.tag {
+  display: inline-block;
+  background: #3a2029;
+  color: #ff9eae;
+  padding: 6px 9px;
+  border-radius: 7px;
+  font-size: 12px;
+}
+
+.empty {
+  text-align: center;
+  color: #91a0ba;
+  padding: 25px;
+}
+
+footer {
+  font-size: 12px;
+  color: #6f7f9a;
+  margin-top: 20px;
+}
+
+@media (max-width: 800px) {
+  aside {
+    width: 165px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  main {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 550px) {
+  .layout {
+    display: block;
+  }
+
+  aside {
+    width: 100%;
+    padding: 18px;
+  }
+
+  .brand {
+    margin-bottom: 18px;
+  }
+
+  main {
+    padding: 17px;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+
+  h1 {
+    font-size: 23px;
+  }
+}
+</style>
+</head>
+
+<body>
+<div class="layout">
+
+  <aside>
+    <div class="brand">Secure<span>Web</span> X</div>
+    <div class="nav">◈ Security Center</div>
+    <p>LOCAL SECURITY LAB</p>
+  </aside>
+
+  <main>
+    <header>
+      <div>
+        <h1>Security Overview</h1>
+        <p>Authentication activity and security events</p>
+      </div>
+
+      <div class="status">● Monitoring Dashboard</div>
+    </header>
+
+    <div class="cards">
+
+      <div class="card">
+        <div class="label">Failed Login Attempts</div>
+        <div class="number yellow" id="failed">—</div>
+        <div class="label">Total recorded attempts</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Events · Last 24 Hours</div>
+        <div class="number green" id="recent">—</div>
+        <div class="label">Recorded security events</div>
+      </div>
+
+      <div class="card">
+        <div class="label">Recent Records</div>
+        <div class="number" id="loaded">—</div>
+        <div class="label">Latest records displayed</div>
+      </div>
+
+    </div>
+
+    <section class="panel">
+      <div class="toolbar">
+        <div>
+          <h2>Security Event Log</h2>
+          <p>Latest activity stored in SQLite</p>
+        </div>
+
+        <button id="refresh" type="button">↻ Refresh</button>
+      </div>
+
+      <div id="message" role="status" aria-live="polite">
+        Loading data...
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Event</th>
+              <th>Username</th>
+              <th>IP Address</th>
+              <th>Timestamp</th>
+            </tr>
+          </thead>
+
+          <tbody id="events">
+            <tr>
+              <td colspan="4" class="empty">Loading events...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer>
+      SecureWeb Lab · Security monitoring · Local environment
+    </footer>
+  </main>
+</div>
+
+<script>
+const message = document.getElementById("message");
+const refreshButton = document.getElementById("refresh");
+const tbody = document.getElementById("events");
+
+async function fetchJSON(url) {
+  const response = await fetch(url, {
+    credentials: "same-origin",
+    cache: "no-store"
+  });
+
+  const data = await response.json().catch(() => ({}));
+
+  if (!response.ok) {
+    throw new Error(
+      data.error || `${url} returned HTTP ${response.status}`
+    );
+  }
+
+  return data;
+}
+
+function showTableMessage(text) {
+  tbody.replaceChildren();
+
+  const tr = document.createElement("tr");
+  const td = document.createElement("td");
+
+  td.colSpan = 4;
+  td.className = "empty";
+  td.textContent = text;
+
+  tr.appendChild(td);
+  tbody.appendChild(tr);
+}
+
+async function refreshDashboard() {
+  message.textContent = "Loading data...";
+  refreshButton.disabled = true;
+
+  try {
+    const [summary, result] = await Promise.all([
+      fetchJSON("/api/security/summary"),
+      fetchJSON("/api/security/events")
+    ]);
+
+    document.getElementById("failed").textContent =
+      summary.failedLogins ?? 0;
+
+    document.getElementById("recent").textContent =
+      summary.recentEvents ?? 0;
+
+    const events = Array.isArray(result.events)
+      ? result.events
+      : [];
+
+    document.getElementById("loaded").textContent =
+      events.length;
+
+    tbody.replaceChildren();
+
+    if (events.length === 0) {
+      showTableMessage("No security events recorded yet.");
+    }
+
+    for (const event of events) {
+      const tr = document.createElement("tr");
+
+      const values = [
+        event.event_type || "UNKNOWN",
+        event.username || "—",
+        event.ip_address || "—",
+        event.created_at || "—"
+      ];
+
+      values.forEach((value, index) => {
+        const td = document.createElement("td");
+        const text = String(value);
+
+        if (index === 0) {
+          const tag = document.createElement("span");
+          tag.className = "tag";
+          tag.textContent = text;
+          td.appendChild(tag);
+        } else {
+          td.textContent = text;
+        }
+
+        tr.appendChild(td);
+      });
+
+      tbody.appendChild(tr);
+    }
+
+    message.textContent = "Data updated successfully.";
+  } catch (error) {
+    console.error("Security dashboard error:", error);
+
+    message.textContent = error.message;
+
+    if (error.message.includes("sign in")) {
+      showTableMessage("Please sign in, then refresh.");
+    } else if (
+      error.message.toLowerCase().includes("administrator")
+    ) {
+      showTableMessage("Admin access is required.");
+    } else {
+      showTableMessage("Could not load security events.");
+    }
+  } finally {
+    refreshButton.disabled = false;
+  }
+}
+
+refreshButton.addEventListener("click", refreshDashboard);
+
+refreshDashboard();
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SecureWeb X | SIEM</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1020;
+      --panel: #131b2e;
+      --line: #293650;
+      --text: #e8eefb;
+      --muted: #9aabc7;
+      --cyan: #55d9e8;
+      --red: #ff687d;
+      --amber: #ffc66d;
+      --green: #66d9a4;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: radial-gradient(circle at 10% 0, #152746, var(--bg) 42%);
+      font: 15px/1.5 system-ui, sans-serif;
+      color: var(--text);
+    }
+
+    main { max-width: 1200px; margin: auto; padding: 28px 18px; }
+
+    header, .section-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    header { margin-bottom: 22px; }
+    h1 { margin: 0; font-size: clamp(25px, 4vw, 36px); }
+    p, .label { color: var(--muted); }
+    button, select {
+      background: #1a2942;
+      color: var(--text);
+      border: 1px solid var(--line);
+      padding: 9px 12px;
+      border-radius: 9px;
+      cursor: pointer;
+    }
+
+    button:hover { border-color: var(--cyan); }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #172239, #11192a);
+      border: 1px solid var(--line);
+      border-radius: 15px;
+      padding: 18px;
+    }
+
+    .label { font-size: 13px; }
+    .num { font-size: 32px; font-weight: 750; margin-top: 6px; }
+    .section { margin-top: 22px; }
+    .table-wrap { overflow: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; }
+    th, td {
+      text-align: left;
+      padding: 12px 10px;
+      border-bottom: 1px solid var(--line);
+      vertical-align: top;
+    }
+
+    th { color: var(--muted); font-size: 12px; text-transform: uppercase; }
+    td { font-size: 14px; }
+    .pill {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: #25314a;
+      font-size: 12px;
+    }
+
+    .high, .critical, .error { color: var(--red); }
+    .medium { color: var(--amber); }
+    .resolved { color: var(--green); }
+    .empty { padding: 25px; text-align: center; color: var(--muted); }
+
+    @media (max-width: 700px) {
+      .grid { grid-template-columns: 1fr; }
+      .card { padding: 14px; }
+    }
+  </style>
+</head>
+<body>
+<main>
+  <header>
+    <div>
+      <h1>SecureWeb X <span style="color:var(--cyan)">/ SIEM</span></h1>
+      <p>Event correlation · Incident triage · Local SQLite</p>
+    </div>
+    <div>
+      <button id="refresh">Refresh</button>
+      <a href="/admin.html" style="color:var(--cyan)">Admin dashboard</a>
+    </div>
+  </header>
+
+  <div id="message" role="status"></div>
+
+  <section class="grid">
+    <div class="card">
+      <div class="label">Open incidents</div>
+      <div class="num" id="openIncidents">—</div>
+    </div>
+    <div class="card">
+      <div class="label">High / critical unresolved</div>
+      <div class="num" id="highSeverity">—</div>
+    </div>
+    <div class="card">
+      <div class="label">Events in last 24 hours</div>
+      <div class="num" id="events24h">—</div>
+    </div>
+  </section>
+
+  <section class="section card">
+    <div class="section-head">
+      <h2>Event volume by type (24h)</h2>
+      <span class="label">Top 8 types</span>
+    </div>
+    <div id="types" class="empty">Loading…</div>
+  </section>
+
+  <section class="section card">
+    <div class="section-head">
+      <h2>Incidents</h2>
+      <select id="status">
+        <option value="">All statuses</option>
+        <option value="open">Open</option>
+        <option value="investigating">Investigating</option>
+        <option value="resolved">Resolved</option>
+      </select>
+    </div>
+
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Severity</th>
+            <th>Incident</th>
+            <th>Source IP</th>
+            <th>Events</th>
+            <th>Status</th>
+            <th>Last seen</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="incidents">
+          <tr><td colspan="7" class="empty">Loading…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <p>
+    Active starter rules: 5 failed logins from one IP within 10 minutes,
+    or 3 WAF detections from one IP within 5 minutes.
+  </p>
+</main>
+
+<script src="/siem.js" defer></script>
+</body>
+</html>

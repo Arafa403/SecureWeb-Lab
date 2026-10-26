@@ -1,0 +1,1000 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#04040c">
+  <title>SecureWeb X | Security Operations Center</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg: #04040c;
+      --border: rgba(130,120,255,.18);
+      --text: #eeedff;
+      --muted: #8483a6;
+      --purple: #9b72ff;
+      --cyan: #35e6ff;
+      --green: #42f5a7;
+      --red: #ff4d73;
+      --hud: "Orbitron", Inter, sans-serif;
+      --mono: "JetBrains Mono", monospace;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      color: var(--text);
+      font-family: Inter, sans-serif;
+      background:
+        radial-gradient(ellipse at 15% -5%, rgba(105,58,255,.28), transparent 42%),
+        radial-gradient(ellipse at 90% 15%, rgba(25,211,255,.14), transparent 36%),
+        var(--bg);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: radial-gradient(circle,rgba(155,114,255,.22) 1px,transparent 1.5px) 0 0/34px 34px;
+      mask-image: radial-gradient(ellipse at 50% 25%,#000 10%,transparent 70%);
+      animation: dots 14s linear infinite;
+    }
+
+    @keyframes dots { to { background-position: 0 34px; } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes spinr { to { transform: rotate(-360deg); } }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(66,245,167,.6); }
+      100% { box-shadow: 0 0 0 10px transparent; }
+    }
+    @keyframes breathe {
+      0%,100% { transform: scale(1); opacity: .7; }
+      50% { transform: scale(1.06); opacity: 1; }
+    }
+    @keyframes ripple {
+      0% { transform: scale(.6); opacity: .7; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+    @keyframes flash {
+      0% { text-shadow: 0 0 30px #fff; color: #fff; transform: scale(1.1); }
+      100% { transform: none; }
+    }
+    @keyframes rise {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: none; }
+    }
+    @keyframes slide { to { background-position: 200% 0; } }
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+    @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes dotpulse {
+      0% { r: 6; opacity: .9; }
+      100% { r: 22; opacity: 0; }
+    }
+
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+
+    .app {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 250px minmax(0,1fr);
+    }
+
+    .sidebar {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      padding: 26px 15px;
+      border-right: 1px solid var(--border);
+      background: rgba(6,6,16,.82);
+      backdrop-filter: blur(22px);
+      display: flex;
+      flex-direction: column;
+      z-index: 10;
+      overflow-y: auto;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 2px 8px 26px;
+    }
+
+    .brand-icon {
+      display: grid;
+      place-items: center;
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      color: #fff;
+      background: conic-gradient(from 0deg,#8e5dff,#34dfff,#8e5dff);
+      box-shadow: 0 0 30px rgba(135,93,255,.6);
+      animation: breathe 3s infinite;
+    }
+
+    .brand-name {
+      font: 900 15px var(--hud);
+      letter-spacing: 1px;
+    }
+
+    .brand-name span {
+      color: var(--cyan);
+      text-shadow: 0 0 14px var(--cyan);
+    }
+
+    .brand-sub {
+      margin-top: 6px;
+      font-size: 9px;
+      letter-spacing: 2.4px;
+      color: var(--muted);
+    }
+
+    .nav-label {
+      margin: 16px 10px 8px;
+      color: #6a6988;
+      font: 600 9px var(--mono);
+      letter-spacing: 2px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      margin: 3px 0;
+      border: 1px solid transparent;
+      border-radius: 40px;
+      color: #9695b3;
+      font-size: 13px;
+      text-decoration: none;
+      transition: .25s;
+    }
+
+    .nav-item:hover, .nav-item.active {
+      color: #fff;
+      border-color: rgba(155,114,255,.35);
+      background: linear-gradient(90deg,rgba(139,92,246,.28),rgba(53,230,255,.05));
+      transform: translateX(3px);
+    }
+
+    .nav-item.active {
+      box-shadow: 0 0 24px rgba(155,114,255,.18);
+    }
+
+    .nav-item i { width: 17px; height: 17px; }
+
+    .nav-count {
+      margin-left: auto;
+      font: 600 10px var(--mono);
+      padding: 3px 9px;
+      border-radius: 20px;
+      color: var(--red);
+      background: rgba(255,77,115,.14);
+      border: 1px solid rgba(255,77,115,.3);
+    }
+
+    .sidebar-bottom { margin-top: auto; padding-top: 20px; }
+
+    .system-card {
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      background: linear-gradient(145deg,rgba(155,114,255,.12),rgba(53,230,255,.04));
+    }
+
+    .system-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      display: inline-block;
+      flex: none;
+      background: var(--green);
+      box-shadow: 0 0 12px var(--green);
+      animation: pulse 1.6s infinite;
+    }
+
+    .system-note {
+      margin-top: 10px;
+      color: var(--muted);
+      font: 10px/1.9 var(--mono);
+    }
+
+    .radar {
+      position: relative;
+      width: 88px;
+      height: 88px;
+      margin: 14px auto 4px;
+      border-radius: 50%;
+      border: 1px solid rgba(66,245,167,.4);
+      background: repeating-radial-gradient(circle,transparent 0 13px,rgba(66,245,167,.2) 13px 14px);
+      box-shadow: 0 0 25px rgba(66,245,167,.15);
+      overflow: hidden;
+    }
+
+    .radar::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: 50%;
+      background: conic-gradient(rgba(66,245,167,.65),transparent 28%);
+      animation: spin 3s linear infinite;
+    }
+
+    .main {
+      min-width: 0;
+      padding: 28px clamp(16px,3vw,44px);
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .eyebrow {
+      color: var(--cyan);
+      font: 500 10px var(--mono);
+      letter-spacing: 2.5px;
+      margin-bottom: 10px;
+    }
+
+    .eyebrow::before { content: "● "; color: var(--green); }
+
+    h1 {
+      font: 900 clamp(24px,3vw,36px) var(--hud);
+      letter-spacing: 1px;
+      margin: 0;
+      background: linear-gradient(90deg,#fff,#c8b6ff 60%,var(--cyan));
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    h1 span { -webkit-text-fill-color: var(--cyan); }
+
+    .subtitle {
+      margin-top: 10px;
+      color: var(--muted);
+      font-size: 12px;
+      line-height: 1.7;
+      max-width: 620px;
+    }
+
+    .top-actions { display: flex; gap: 10px; align-items: center; }
+
+    .icon-btn, .refresh-btn {
+      border: 1px solid var(--border);
+      background: #0d0d1c;
+      color: var(--text);
+      border-radius: 40px;
+      padding: 11px 18px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 9px;
+      transition: .25s;
+    }
+
+    .refresh-btn {
+      background: linear-gradient(115deg,#8656f6,#3f8cff);
+      border: 0;
+      color: #fff;
+      font-size: 12px;
+      font-weight: 700;
+      box-shadow: 0 0 26px rgba(134,86,246,.45);
+    }
+
+    .refresh-btn:hover, .icon-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 0 34px rgba(53,230,255,.4);
+    }
+
+    .refresh-btn:disabled { opacity: .6; cursor: wait; }
+    .refresh-btn i { width: 15px; height: 15px; }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding-left: 14px;
+      border-left: 1px solid var(--border);
+    }
+
+    .avatar {
+      width: 42px;
+      height: 42px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: conic-gradient(#a36bff,#35dfff,#a36bff);
+      color: #fff;
+      font: 700 12px var(--hud);
+      box-shadow: 0 0 20px rgba(163,107,255,.45);
+    }
+
+    .profile-name { font-size: 12px; font-weight: 700; }
+    .profile-role {
+      margin-top: 4px;
+      font: 9px var(--mono);
+      color: var(--muted);
+      letter-spacing: 1px;
+    }
+
+    .status-strip {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 14px 22px;
+      border: 1px solid rgba(66,245,167,.25);
+      border-radius: 40px;
+      background: linear-gradient(90deg,rgba(66,245,167,.09),rgba(53,230,255,.03));
+      position: relative;
+      overflow: hidden;
+    }
+
+    .status-strip::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(100deg,transparent 30%,rgba(66,245,167,.12) 50%,transparent 70%) 0 0/200% 100%;
+      animation: slide 5s linear infinite;
+      pointer-events: none;
+    }
+
+    .status-left { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+
+    .status-left strong {
+      color: var(--green);
+      font: 700 11px var(--hud);
+      letter-spacing: 1.5px;
+      text-shadow: 0 0 12px rgba(66,245,167,.6);
+    }
+
+    .status-meta { color: var(--muted); font: 10px var(--mono); }
+    .status-meta b { color: var(--cyan); font-weight: 500; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(300px,380px) minmax(0,1fr);
+      gap: 22px;
+      align-items: center;
+      margin: 24px 0 6px;
+      animation: rise .7s both;
+    }
+
+    .core {
+      position: relative;
+      width: min(100%,360px);
+      aspect-ratio: 1;
+      margin: auto;
+      display: grid;
+      place-items: center;
+    }
+
+    .ring { position: absolute; border-radius: 50%; }
+    .r1 { inset: 0; border: 1px dashed rgba(155,114,255,.45); animation: spin 40s linear infinite; }
+    .r2 { inset: 7%; border: 3px solid transparent; border-top-color: var(--cyan); border-right-color: rgba(53,230,255,.25); filter: drop-shadow(0 0 8px var(--cyan)); animation: spin 6s linear infinite; }
+    .r3 { inset: 15%; border: 2px solid transparent; border-bottom-color: var(--purple); border-left-color: rgba(155,114,255,.3); filter: drop-shadow(0 0 8px var(--purple)); animation: spinr 9s linear infinite; }
+    .r4 { inset: 23%; border: 1px dotted rgba(66,245,167,.6); animation: spin 22s linear infinite; }
+
+    .orbit { position: absolute; inset: 0; animation: spin 14s linear infinite; }
+    .orbit.o2 { inset: 15%; animation: spinr 8s linear infinite; }
+
+    .orbit i {
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      width: 10px;
+      height: 10px;
+      margin-left: -5px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 14px var(--cyan),0 0 28px var(--cyan);
+    }
+
+    .orbit.o2 i { background: var(--purple); box-shadow: 0 0 14px var(--purple),0 0 28px var(--purple); }
+
+    .pulse-ring {
+      position: absolute;
+      inset: 31%;
+      border-radius: 50%;
+      border: 2px solid var(--green);
+      animation: ripple 3s ease-out infinite;
+    }
+
+    .pulse-ring.b { animation-delay: 1.5s; }
+
+    .core-center {
+      position: absolute;
+      inset: 30%;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      background: radial-gradient(circle,rgba(53,230,255,.2),rgba(14,10,40,.95) 70%);
+      border: 1px solid rgba(53,230,255,.4);
+      box-shadow: 0 0 45px rgba(53,230,255,.3),inset 0 0 30px rgba(155,114,255,.25);
+    }
+
+    .core-center i { width: 22px; height: 22px; color: var(--cyan); margin: 0 auto 2px; display: block; }
+    .core-num { font: 900 clamp(20px,3.4vw,28px) var(--hud); text-shadow: 0 0 18px var(--cyan); }
+    .core-lbl { font: 9px var(--mono); letter-spacing: 2px; color: var(--muted); margin-top: 3px; }
+
+    .stats { display: grid; gap: 14px; }
+
+    .stat-card {
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 18px 24px;
+      border: 1px solid var(--border);
+      border-radius: 70px 24px 24px 70px;
+      background: linear-gradient(145deg,rgba(21,21,42,.92),rgba(10,10,22,.95));
+      backdrop-filter: blur(10px);
+      transition: .3s;
+      animation: rise .7s both;
+    }
+
+    .stat-card:nth-child(2) { animation-delay: .12s; }
+    .stat-card:nth-child(3) { animation-delay: .24s; }
+
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      right: -60px;
+      top: -70px;
+      background: var(--glow);
+      filter: blur(55px);
+      opacity: .22;
+      pointer-events: none;
+    }
+
+    .stat-card:hover {
+      transform: translateX(8px);
+      border-color: var(--accent);
+      box-shadow: 0 14px 45px rgba(0,0,0,.4),0 0 35px color-mix(in srgb,var(--accent) 25%,transparent);
+    }
+
+    .gauge { position: relative; flex: none; width: 76px; height: 76px; }
+    .gauge svg { width: 100%; height: 100%; transform: rotate(-90deg); overflow: visible; }
+    .gauge circle { fill: none; stroke-width: 5; stroke-linecap: round; }
+    .gt { stroke: rgba(255,255,255,.08); }
+    .gf { stroke: var(--accent); stroke-dasharray: 100; stroke-dashoffset: 100; filter: drop-shadow(0 0 6px var(--accent)); transition: stroke-dashoffset 1.2s cubic-bezier(.2,.8,.2,1); }
+
+    .gauge .stat-icon { position: absolute; inset: 0; display: grid; place-items: center; color: var(--accent); }
+    .stat-icon i { width: 20px; height: 20px; }
+    .stat-body { min-width: 0; flex: 1; }
+    .stat-title { color: #b0afc9; font: 600 10px var(--mono); letter-spacing: 1px; text-transform: uppercase; }
+    .stat-value { margin-top: 8px; font: 900 34px var(--hud); color: #fff; text-shadow: 0 0 24px var(--accent); }
+    .stat-value.flash { animation: flash .7s; }
+    .stat-foot { margin-top: 6px; color: var(--muted); font-size: 10px; }
+    .stat-foot span { color: var(--accent); font: 700 9px var(--mono); padding: 2px 7px; border-radius: 20px; background: color-mix(in srgb,var(--accent) 14%,transparent); }
+
+    .section-heading {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin: 32px 0 15px;
+    }
+
+    .section-heading h2 { margin: 0; font: 700 13px var(--hud); letter-spacing: 1.5px; text-transform: uppercase; }
+
+    .section-heading h2::before {
+      content: "";
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      margin-right: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 12px var(--cyan);
+    }
+
+    .section-heading p { margin: 6px 0 0 20px; color: var(--muted); font-size: 11px; }
+    .tiny-label { color: var(--cyan); opacity: .75; font: 10px var(--mono); letter-spacing: 1.5px; }
+
+    .two-column {
+      display: grid;
+      grid-template-columns: minmax(0,1.55fr) minmax(250px,.85fr);
+      gap: 16px;
+    }
+
+    .panel {
+      position: relative;
+      min-width: 0;
+      border: 1px solid var(--border);
+      border-radius: 26px;
+      background: linear-gradient(145deg,rgba(19,19,38,.93),rgba(10,10,22,.96));
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+    }
+
+    .panel-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 19px 24px;
+      border-bottom: 1px solid rgba(155,145,255,.12);
+    }
+
+    .panel-title { font: 700 11px var(--hud); letter-spacing: 1.2px; text-transform: uppercase; }
+    .panel-subtitle { margin-top: 6px; color: var(--muted); font-size: 10px; }
+    .panel-body { padding: 20px 24px; }
+
+    .chart-area {
+      height: 215px;
+      display: flex;
+      align-items: end;
+      gap: 10px;
+      padding: 16px 0 0;
+      border-bottom: 1px solid var(--border);
+      background-image: linear-gradient(rgba(155,145,255,.07) 1px,transparent 1px);
+      background-size: 100% 43px;
+    }
+
+    .chart-bar-wrap {
+      flex: 1;
+      min-width: 0;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: end;
+      align-items: center;
+      gap: 9px;
+    }
+
+    .chart-bar {
+      width: min(100%,32px);
+      min-height: 4px;
+      border-radius: 20px 20px 4px 4px;
+      background: linear-gradient(180deg,var(--cyan),#7860ff 70%,#4a2fd0);
+      box-shadow: 0 0 20px rgba(53,230,255,.35);
+      transition: height .5s,filter .2s;
+    }
+
+    .chart-bar:hover { filter: brightness(1.4) drop-shadow(0 0 10px var(--cyan)); }
+    .chart-day { color: var(--muted); font: 9px var(--mono); padding-bottom: 9px; }
+
+    .zz { height: 235px; border-bottom: 1px solid var(--border); }
+    .zz svg { width: 100%; height: 100%; overflow: visible; }
+    .zz-grid { stroke: rgba(155,145,255,.09); stroke-width: 1; }
+    .zz-line { fill: none; stroke: url(#zgL); stroke-width: 3.5; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 1; stroke-dashoffset: 1; animation: draw 1.8s ease forwards; filter: url(#zgG); }
+    .zz-area { fill: url(#zgA); opacity: 0; animation: fadein 1s .9s forwards; }
+    .zz-dot { fill: #070713; stroke: var(--cyan); stroke-width: 3; filter: url(#zgG); transition: .2s; opacity: 0; animation: fadein .4s forwards; }
+    .zz-dot:hover { stroke: #fff; stroke-width: 4; }
+    .zz-val { fill: var(--cyan); font: 600 12px var(--mono); text-anchor: middle; opacity: 0; animation: fadein .4s forwards; }
+    .zz-day { fill: var(--muted); font: 10px var(--mono); text-anchor: middle; }
+    .zz-ping { fill: none; stroke: var(--cyan); stroke-width: 2; animation: dotpulse 2s ease-out infinite; }
+    .zz-runner { fill: #fff; filter: url(#zgG); }
+
+    .distribution { display: flex; flex-direction: column; gap: 19px; }
+    .dist-top { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; margin-bottom: 9px; }
+    .dist-name { display: flex; align-items: center; gap: 9px; }
+    .dist-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--dot); box-shadow: 0 0 12px var(--dot); }
+    .dist-number { font: 11px var(--mono); color: #d5d3ee; }
+    .progress { height: 8px; border-radius: 10px; overflow: hidden; background: #1d1c33; }
+    .progress-fill { height: 100%; width: 0; border-radius: inherit; background: var(--dot); box-shadow: 0 0 12px var(--dot); transition: width .6s; }
+
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 17px 22px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .field {
+      min-width: 140px;
+      flex: 1;
+      color: var(--text);
+      background: #070713;
+      border: 1px solid rgba(155,145,255,.22);
+      border-radius: 40px;
+      padding: 11px 16px;
+      outline: none;
+      font-size: 11px;
+      transition: .2s;
+    }
+
+    .field:focus { border-color: var(--cyan); box-shadow: 0 0 0 3px rgba(53,230,255,.1),0 0 20px rgba(53,230,255,.15); }
+    .field option { background: #111122; }
+    .search-wrap { position: relative; flex: 2; min-width: 190px; }
+    .search-wrap i { position: absolute; top: 11px; left: 15px; width: 15px; height: 15px; color: var(--cyan); }
+    .search-wrap input { width: 100%; padding-left: 38px; }
+    .table-wrap { overflow-x: auto; }
+
+    table { width: 100%; border-collapse: collapse; white-space: nowrap; text-align: left; }
+    thead { background: linear-gradient(90deg,rgba(155,114,255,.1),rgba(53,230,255,.04)); }
+    th { color: var(--cyan); font: 600 9px var(--mono); text-transform: uppercase; letter-spacing: 1.5px; padding: 14px 20px; }
+    td { padding: 15px 20px; border-top: 1px solid rgba(155,145,255,.08); color: #d0cee5; font-size: 10px; max-width: 280px; overflow: hidden; text-overflow: ellipsis; }
+    tbody tr { transition: .15s; }
+    tbody tr:hover { background: linear-gradient(90deg,rgba(53,230,255,.1),rgba(155,114,255,.04)); box-shadow: inset 3px 0 var(--cyan); }
+
+    .mono { font-family: var(--mono); font-size: 10px; }
+    .event-id { color: #8583a7; }
+    .event-name { display: flex; align-items: center; gap: 8px; font-weight: 700; }
+    .event-indicator { width: 8px; height: 8px; border-radius: 50%; background: var(--event-color,var(--cyan)); box-shadow: 0 0 10px var(--event-color,var(--cyan)); }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 11px;
+      border-radius: 20px;
+      font: 700 9px var(--mono);
+      letter-spacing: .5px;
+      background: var(--pill-bg);
+      color: var(--pill-color);
+      border: 1px solid color-mix(in srgb,var(--pill-color) 30%,transparent);
+    }
+
+    .pill::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: currentColor; box-shadow: 0 0 8px currentColor; }
+    .empty { padding: 40px 15px; text-align: center; color: var(--muted); font: 12px var(--mono); }
+    .table-footer { display: flex; justify-content: space-between; gap: 10px; padding: 15px 22px; color: var(--muted); font: 10px var(--mono); }
+    .footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding: 30px 2px 5px; color: #686782; font: 10px var(--mono); }
+    .footer strong { color: #a5a3c3; }
+
+    .message { display: none; margin: 0 0 16px; padding: 12px 18px; border-radius: 40px; font-size: 11px; line-height: 1.6; }
+    .message.show { display: block; }
+    .message.error { color: #ff8aa3; border: 1px solid rgba(255,77,115,.3); background: rgba(255,77,115,.08); }
+    .message.info { color: #7ceeff; border: 1px solid rgba(53,230,255,.25); background: rgba(53,230,255,.06); }
+    .mobile-menu { display: none; }
+
+    @media(max-width:1100px) {
+      .app { grid-template-columns: 220px minmax(0,1fr); }
+      .two-column, .hero { grid-template-columns: 1fr; }
+      .profile { display: none; }
+    }
+
+    @media(max-width:760px) {
+      .app { display: block; }
+      .sidebar { display: none; }
+      .main { padding: 20px 14px; }
+      .topbar { align-items: flex-start; }
+      .top-actions { gap: 6px; }
+      .mobile-menu { display: inline-flex; }
+      .status-meta { display: none; }
+      .stat-card { padding: 14px 16px; gap: 14px; border-radius: 60px 20px 20px 60px; }
+      .gauge { width: 62px; height: 62px; }
+      .stat-value { font-size: 26px; }
+      .chart-area { gap: 5px; }
+      .toolbar { padding: 12px; }
+      .field, .search-wrap { min-width: 100%; }
+      .panel-head, .panel-body { padding: 16px; }
+    }
+
+    @media(prefers-reduced-motion:reduce) {
+      *,*::before,*::after { animation: none !important; transition: none !important; }
+      .zz-line { stroke-dashoffset: 0; }
+      .zz-area,.zz-dot,.zz-val { opacity: 1; }
+    }
+  </style>
+</head>
+
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="brand-icon"><i data-lucide="shield-check"></i></div>
+      <div>
+        <div class="brand-name">SECUREWEB<span> X</span></div>
+        <div class="brand-sub">SECURITY PLATFORM</div>
+      </div>
+    </div>
+
+    <div class="nav-label">// WORKSPACE</div>
+    <a class="nav-item active" href="#overview"><i data-lucide="layout-dashboard"></i> Overview</a>
+    <a class="nav-item" href="#events"><i data-lucide="activity"></i> Security Events <span class="nav-count" id="eventTotalBadge">0</span></a>
+    <a class="nav-item" href="#analytics"><i data-lucide="chart-no-axes-combined"></i> Analytics</a>
+
+    <div class="nav-label">// SECURITY</div>
+    <a class="nav-item" href="#events"><i data-lucide="shield-alert"></i> Threat Monitoring</a>
+    <a class="nav-item" href="#events"><i data-lucide="scan-search"></i> Event Investigation</a>
+
+    <div class="nav-label">// SYSTEM</div>
+    <a class="nav-item" href="#system-status"><i data-lucide="server"></i> System Status</a>
+
+    <div class="sidebar-bottom">
+      <div class="system-card" id="system-status">
+        <div class="system-title"><span class="live-dot"></span> Security monitor</div>
+        <div class="radar"></div>
+        <div class="system-note">
+          API: <span id="sidebarApiStatus">Connecting...</span><br>
+          UTC: <span id="clock" style="color:var(--green)">--:--:--</span><br>
+          <span style="color:var(--cyan)">SECUREWEB // SOC</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar" id="overview">
+      <div>
+        <div class="eyebrow">SECURITY OPERATIONS CENTER</div>
+        <h1>Security Overview<span>_</span></h1>
+        <div class="subtitle">Monitor your security events, investigate suspicious activity, and review your application telemetry.</div>
+      </div>
+
+      <div class="top-actions">
+        <button class="icon-btn mobile-menu" id="mobileRefreshBtn" title="Refresh dashboard" aria-label="Refresh">
+          <i data-lucide="refresh-cw"></i>
+        </button>
+        <button class="refresh-btn" id="refreshBtn">
+          <i data-lucide="refresh-cw"></i> Refresh data
+        </button>
+        <div class="profile">
+          <div class="avatar">SA</div>
+          <div>
+            <div class="profile-name" id="adminName">Security Analyst</div>
+            <div class="profile-role">SOC DASHBOARD</div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div id="message" class="message" role="status" aria-live="polite"></div>
+
+    <div class="status-strip">
+      <div class="status-left">
+        <span class="live-dot"></span>
+        <strong id="connectionStatus">INITIALIZING</strong>
+        <span style="color:var(--muted)">· Security telemetry status</span>
+      </div>
+      <div class="status-meta">LAST UPDATE: <b id="lastUpdated">Waiting for data...</b></div>
+    </div>
+
+    <section class="hero">
+      <div class="core" aria-hidden="true">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+        <div class="ring r4"></div>
+        <div class="orbit"><i></i></div>
+        <div class="orbit o2"><i></i></div>
+        <div class="pulse-ring"></div>
+        <div class="pulse-ring b"></div>
+        <div class="core-center">
+          <div>
+            <i data-lucide="shield-check"></i>
+            <div class="core-num" id="coreNum">--</div>
+            <div class="core-lbl">EVENTS</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="stats">
+        <article class="stat-card" style="--accent:var(--red);--glow:var(--red)">
+          <div class="gauge">
+            <svg viewBox="0 0 64 64">
+              <circle class="gt" cx="32" cy="32" r="27"></circle>
+              <circle class="gf" id="ringA" cx="32" cy="32" r="27" pathLength="100"></circle>
+            </svg>
+            <div class="stat-icon"><i data-lucide="user-round-x"></i></div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-title">Failed Login Attempts</div>
+            <div class="stat-value" id="failedLogins">--</div>
+            <div class="stat-foot"><span>AUTH</span> &nbsp;Failed authentication activity</div>
+          </div>
+        </article>
+
+        <article class="stat-card" style="--accent:var(--purple);--glow:var(--purple)">
+          <div class="gauge">
+            <svg viewBox="0 0 64 64">
+              <circle class="gt" cx="32" cy="32" r="27"></circle>
+              <circle class="gf" id="ringB" cx="32" cy="32" r="27" pathLength="100"></circle>
+            </svg>
+            <div class="stat-icon"><i data-lucide="shield-alert"></i></div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-title">WAF Security Events</div>
+            <div class="stat-value" id="wafEvents">--</div>
+            <div class="stat-foot"><span>WAF</span> &nbsp;Detection and blocking events</div>
+          </div>
+        </article>
+
+        <article class="stat-card" style="--accent:var(--cyan);--glow:var(--cyan)">
+          <div class="gauge">
+            <svg viewBox="0 0 64 64">
+              <circle class="gt" cx="32" cy="32" r="27"></circle>
+              <circle class="gf" id="ringC" cx="32" cy="32" r="27" pathLength="100"></circle>
+            </svg>
+            <div class="stat-icon"><i data-lucide="activity"></i></div>
+          </div>
+          <div class="stat-body">
+            <div class="stat-title">Recent Security Events</div>
+            <div class="stat-value" id="recentEvents">--</div>
+            <div class="stat-foot"><span>TELEMETRY</span> &nbsp;Recent recorded activity</div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="analytics">
+      <div class="section-heading">
+        <div>
+          <h2>Security Analytics</h2>
+          <p>Distribution of the events currently loaded from the API</p>
+        </div>
+        <span class="tiny-label">EVENT BREAKDOWN</span>
+      </div>
+
+      <div class="two-column">
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Event Activity</div>
+              <div class="panel-subtitle">Event counts grouped by date from available records</div>
+            </div>
+            <span class="pill" style="--pill-bg:rgba(53,230,255,.09);--pill-color:var(--cyan)">TIMELINE</span>
+          </div>
+          <div class="panel-body">
+            <div class="chart-area" id="eventTrendChart" style="display:none"></div>
+            <div class="zz" id="zigzagChart"></div>
+          </div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head">
+            <div>
+              <div class="panel-title">Event Distribution</div>
+              <div class="panel-subtitle">Event types in loaded records</div>
+            </div>
+            <i data-lucide="chart-pie" style="color:var(--purple);width:18px"></i>
+          </div>
+          <div class="panel-body">
+            <div class="distribution" id="distributionList"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section id="events">
+      <div class="section-heading">
+        <div>
+          <h2>Security Event Explorer</h2>
+          <p>Search, filter, and investigate recorded security activity</p>
+        </div>
+        <span class="tiny-label">EVENT LOGS</span>
+      </div>
+
+      <article class="panel">
+        <div class="panel-head">
+          <div>
+            <div class="panel-title">Event Records</div>
+            <div class="panel-subtitle">Review events returned by your SecureWeb API</div>
+          </div>
+          <span class="pill" style="--pill-bg:rgba(155,114,255,.12);--pill-color:#bda4ff">
+            <span id="resultsCount">0</span>&nbsp; RECORDS
+          </span>
+        </div>
+
+        <div class="toolbar">
+          <div class="search-wrap">
+            <i data-lucide="search"></i>
+            <input class="field" id="eventSearch" type="search" placeholder="Search event, IP, user, path..." aria-label="Search events">
+          </div>
+
+          <select class="field" id="eventFilter" aria-label="Filter by event type">
+            <option value="all">All event types</option>
+            <option value="login">Login events</option>
+            <option value="waf">WAF events</option>
+            <option value="block">Blocked events</option>
+            <option value="detect">Detection events</option>
+          </select>
+
+          <select class="field" id="severityFilter" aria-label="Filter by severity">
+            <option value="all">All severity levels</option>
+            <option value="high">High / Critical</option>
+            <option value="medium">Medium</option>
+            <option value="low">Low / Informational</option>
+          </select>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Event ID</th>
+                <th>Event Type</th>
+                <th>Severity</th>
+                <th>Source IP</th>
+                <th>Path / User</th>
+                <th>Timestamp</th>
+              </tr>
+            </thead>
+            <tbody id="eventsTable">
+              <tr><td colspan="6" class="empty">&gt; Loading security events...</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <div class="table-footer">
+          <span id="tableStatus">Waiting for API response...</span>
+          <span>SecureWeb X <strong style="color:var(--cyan)">/ SOC</strong></span>
+        </div>
+      </article>
+    </section>
+
+    <footer class="footer">
+      <span><strong>SECUREWEB X</strong> · Security Operations Dashboard</span>
+      <span>Local lab environment · Data provided by your backend API</span>
+    </footer>
+  </main>
+</div>
+
+<script src="/admin.js" defer></script>
+
+<script>
+window.addEventListener("DOMContentLoaded", function () {
+  if (window.lucide) {
+    window.lucide.createIcons();
+  }
+
+  const clock = document.getElementById("clock");
+
+  function tick() {
+    if (clock) {
+      clock.textContent = new Date().toISOString().slice(11, 19);
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+
+  const navItems = document.querySelectorAll(".nav-item");
+
+  navItems.forEach(function (item) {
+    item.addEventListener("click", function () {
+      navItems.forEach(function (link) {
+        link.classList.remove("active");
+      });
+
+      item.classList.add("active");
+    });
+  });
+
+  const mobileRefreshBtn = document.getElementById("mobileRefreshBtn");
+  const refreshBtn = document.getElementById("refreshBtn");
+
+  if (mobileRefreshBtn && refreshBtn) {
+    mobileRefreshBtn.addEventListener("click", function () {
+      refreshBtn.click();
+    });
+  }
+});
+</script>
+</body>
+</html>

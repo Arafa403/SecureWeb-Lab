@@ -1,0 +1,119 @@
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080d12">
+  <title>SecureWeb Lab | Learn. Test. Secure.</title>
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header class="navbar">
+    <a href="#home" class="brand"><span class="brand-icon">S</span> SecureWeb<span class="green">Lab</span></a>
+    <nav>
+      <a href="#home" data-i18n="navHome">Home</a>
+      <a href="#features" data-i18n="navFeatures">Features</a>
+      <a href="#labs" data-i18n="navLabs">Security Lab</a>
+    </nav>
+    <div class="nav-actions">
+      <button id="langBtn" class="btn btn-ghost" type="button">عربي</button>
+      <button id="navLogin" class="btn btn-primary" type="button" data-i18n="signIn">Sign in</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="home" class="hero container">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="pulse"></span><span data-i18n="eyebrow">YOUR WEB SECURITY TRAINING GROUND</span></div>
+        <h1 data-i18n="heroTitle">Think like an attacker.<br><span class="green">Build like a defender.</span></h1>
+        <p data-i18n="heroDesc">Learn web security in a practical lab. Understand vulnerabilities, test your defenses, and build safer applications.</p>
+        <div class="hero-actions">
+          <button id="getStarted" class="btn btn-primary btn-large" type="button"><span data-i18n="getStarted">Get started</span> ↗</button>
+          <a class="btn btn-ghost btn-large" href="#labs" data-i18n="exploreLabs">Explore labs ↓</a>
+        </div>
+        <div class="trust-line"><span class="green">●</span> <span data-i18n="localNote">Local learning environment · Practice responsibly</span></div>
+      </div>
+      <div class="hero-visual">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="shield"><span>⌘</span></div>
+        <div class="float-card card-top"><span class="green">●</span> <span data-i18n="systemReady">SYSTEM READY</span><strong>SecureWeb v1.0</strong></div>
+        <div class="float-card card-bottom"><span class="blue">▣</span> <span data-i18n="learningMode">LEARNING MODE</span><strong>Web Application Security</strong></div>
+      </div>
+    </section>
+
+    <section id="features" class="container section">
+      <div class="section-heading">
+        <span class="eyebrow" data-i18n="whyTitle">WHY SECUREWEB LAB</span>
+        <h2 data-i18n="featuresTitle">Learn security by doing.</h2>
+        <p data-i18n="featuresDesc">Build real skills with guided, hands-on learning.</p>
+      </div>
+      <div class="feature-grid">
+        <article class="feature"><div class="feature-icon">⌘</div><h3 data-i18n="feature1Title">Hands-on Labs</h3><p data-i18n="feature1Desc">Understand common web vulnerabilities in a controlled training environment.</p></article>
+        <article class="feature"><div class="feature-icon blue-icon">◈</div><h3 data-i18n="feature2Title">Secure Authentication</h3><p data-i18n="feature2Desc">Explore password hashing, sessions, and access control.</p></article>
+        <article class="feature"><div class="feature-icon">↗</div><h3 data-i18n="feature3Title">Track Progress</h3><p data-i18n="feature3Desc">Use your dashboard to follow your learning journey.</p></article>
+      </div>
+    </section>
+
+    <section id="labs" class="container section">
+      <div class="section-heading">
+        <span class="eyebrow" data-i18n="labEyebrow">PRACTICE ZONE</span>
+        <h2 data-i18n="labTitle">Explore the Security Lab.</h2>
+        <p data-i18n="labDesc">Start with the concepts behind real-world web application security.</p>
+      </div>
+      <div class="lab-grid">
+        <article class="lab-card"><div class="lab-number">01 / WEB</div><h3>XSS</h3><p data-i18n="xssDesc">Learn how untrusted input can become executable browser content and how output encoding helps prevent it.</p><span class="tag">Cross-Site Scripting</span></article>
+        <article class="lab-card"><div class="lab-number">02 / DATA</div><h3>SQL Injection</h3><p data-i18n="sqlDesc">Understand unsafe database queries and how parameterized queries reduce injection risks.</p><span class="tag">Input & Queries</span></article>
+        <article class="lab-card"><div class="lab-number">03 / ACCESS</div><h3 data-i18n="accessTitle">Access Control</h3><p data-i18n="accessDesc">Explore authentication, authorization, and server-side permission checks.</p><span class="tag">Identity & Sessions</span></article>
+        <article class="lab-card"><div class="lab-number">04 / DEFENSE</div><h3 data-i18n="secureTitle">Secure Coding</h3><p data-i18n="secureDesc">Practice validation, safe error handling, and security headers.</p><span class="tag">Defensive Development</span></article>
+      </div>
+    </section>
+
+    <section id="account" class="container section account-section">
+      <div class="auth-card" id="authCard">
+        <span class="eyebrow" data-i18n="memberArea">MEMBER AREA</span>
+        <h2 id="authTitle" data-i18n="welcomeBack">Welcome back.</h2>
+        <p id="authSubtitle" data-i18n="loginDesc">Sign in to access your learning dashboard.</p>
+        <div class="auth-tabs">
+          <button id="loginTab" class="auth-tab active" type="button" data-i18n="signIn">Sign in</button>
+          <button id="registerTab" class="auth-tab" type="button" data-i18n="createAccount">Create account</button>
+        </div>
+        <form id="authForm">
+          <label for="username" data-i18n="usernameOrEmail">Username or email</label>
+          <input id="username" name="username" autocomplete="username" required maxlength="254">
+          <div id="emailGroup" hidden>
+            <label for="email" data-i18n="email">Email</label>
+            <input id="email" name="email" type="email" autocomplete="email" maxlength="254">
+          </div>
+          <label for="password" data-i18n="password">Password</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="72">
+          <p class="form-hint" id="passwordHint" hidden data-i18n="passwordHint">Use 8–72 characters.</p>
+          <button class="btn btn-primary btn-full" type="submit" id="submitAuth" data-i18n="signIn">Sign in</button>
+          <p id="authMessage" class="message" role="status"></p>
+        </form>
+      </div>
+
+      <div class="dashboard-card" id="dashboard" hidden>
+        <span class="eyebrow" data-i18n="yourDashboard">YOUR DASHBOARD</span>
+        <h2><span data-i18n="welcome">Welcome,</span> <span id="dashUsername" class="green"></span></h2>
+        <p data-i18n="dashboardDesc">Your security learning journey starts here.</p>
+        <div class="stats">
+          <div class="stat"><span data-i18n="availableLabs">Available labs</span><strong id="statLabs">4</strong></div>
+          <div class="stat"><span data-i18n="completedLabs">Completed</span><strong id="statCompleted">0</strong></div>
+          <div class="stat"><span data-i18n="accountRole">Account role</span><strong id="statRole">user</strong></div>
+        </div>
+        <a class="btn btn-primary" href="#labs" data-i18n="exploreLabs">Explore labs ↓</a>
+        <button id="logoutBtn" class="btn btn-ghost" type="button" data-i18n="logout">Log out</button>
+        <p id="dashMessage" class="message" role="status"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <a href="#home" class="brand">SecureWeb<span class="green">Lab</span></a>
+    <p data-i18n="footerText">Learn ethically. Test locally. Build securely.</p>
+    <span>© 2026 SecureWeb Lab</span>
+  </footer>
+</body>
+</html>
